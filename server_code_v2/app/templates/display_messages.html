@@ -1,16 +1,68 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% from "_formhelpers.html" import render_field %} {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename = 'css/calendar.css') }}">
-<!-- Credit to Paul Navasard -->
+<!-- Credit to dangrossman for date time picker -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<!-- Credit to Paul Navasard for calendar-->
 <div class="container">
     <div class="row">
         <div class="col-sm">
-            <div id="calendar"></div>
+            <div id="calendar_div">
+                <div id="calendar"></div>
+            </div>
         </div>
         <div class="col-sm">
-            {% block test %}
-            {% endblock %}
+            <h1>Create Message</h1>
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="row">
+                    <div class="col-sm">
+                        {{ render_field(form.message, class="md-textarea form-control", placeholder = "Insert Message Here...") }}
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-sm ">
+                        {{ render_field(form.start_time.label)}}
+                    </div>
+                    <div class="col-sm-9">
+                        {{ render_field(form.start_time, class="form-control") }}
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-sm ">
+                        {{ render_field(form.end_time.label)}}
+                    </div>
+                    <div class="col-sm-9">
+                        {{ render_field(form.end_time, class="form-control") }}
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-sm ">
+                        {{ render_field(form.repeat.label)}}
+                    </div>
+                    <div class="col-sm-9">
+                        {{ render_field(form.repeat,class = "btn btn-secondary dropdown-toggle") }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        {{ render_field(form.submit, class ="btn btn-primary") }}
+                    </div>
+                </div>
+                <!-- Insert scripts for the date fields -->
+                <script>
+                    $(function() {
+                        $('input[name="start_time",name="end_time"]').daterangepicker({
+                            singleDatePicker: true,
+                            timePicker: true,
+                            showDropdowns: true,
+                            minYear: 1901,
+                            maxYear: parseInt(moment().format('YYYY'), 10)
+                        }, function(start, end, label) {});
+                    });
+                </script>
+
+            </form>
         </div>
     </div>
 </div>
