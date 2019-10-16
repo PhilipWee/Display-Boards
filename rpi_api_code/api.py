@@ -12,7 +12,7 @@ from flask_dance.contrib.github import make_github_blueprint, github
 from flask_cors import CORS
 import sys, os
 import numpy as np
-from display_msg_funcs import print_msg
+from display_msg_funcs import print_msg, run_time_process
 #--------------------------------------REQUIREMENTS--------------------------------------
 
 
@@ -24,7 +24,19 @@ def display_message():
     #Message details are stored under 'msg' key
     content = request.get_json()
     print_msg(content['msg'])
+    
+    #If the display time key is true, then run the time display function
+    if content['display_time'] == 'true':
+        run_time_process(True)
+    elif content['display_time'] == 'false':
+        run_time_process(False)
+    else:
+        #Do not change the current setting
+        pass
+
     return jsonify({'details':'ok'})
+
+
 
 
 if __name__ == '__main__':

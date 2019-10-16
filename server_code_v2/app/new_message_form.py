@@ -11,4 +11,7 @@ class newMessageForm(FlaskForm):
                                             ('weekly', 'Weekly'),
                                             ('monthly', 'Monthly'),
                                             ('yearly', 'Yearly')])
+    show_time = SelectField('Show Time', choices=[('keep_current_setting', 'Keep Current Setting'),
+                                            ('true', 'True'),
+                                            ('false', 'False')])
     submit = SubmitField('Create Message')

@@ -19,6 +19,7 @@ def display_messages():
         start_time = form.start_time.data
         end_time = form.end_time.data
         repeat = form.repeat.data
+        show_time = form.show_time.data
         #Need to include board id and importance function in future
         importance = None
         board_id = None
@@ -31,7 +32,10 @@ def display_messages():
                         importance=importance,
                         board_id=board_id)
         #Send the message for displaying to the RPI
+        inform_api(msg, 'http://169.254.186.12:5001', show_time=show_time)
 
         return render_template('display_messages.html',title='Message Configuration Panel', form=form)
     return render_template('display_messages.html',title='Message Configuration Panel', form=form)
+
+
         

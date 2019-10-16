@@ -8,9 +8,13 @@
 
 import requests
 
-def inform_api(msg, destination_ip):
+def inform_api(msg, destination_ip_and_port, **kwargs):
     dictToSend = {'msg':msg}
-    res = requests.post(destination_ip + '/endpoint', json=dictToSend)
+    #Add the additional keyword arguments
+    for key, value in kwargs.items():
+        dictToSend[key] = value
+    print('Attempting to send post request to ' + destination_ip_and_port + '/display_message')
+    res = requests.post(destination_ip_and_port + '/display_message', json=dictToSend)
     if res.json() == {'details':'ok'}:
         print('sucessfully called API for display')
         return 0

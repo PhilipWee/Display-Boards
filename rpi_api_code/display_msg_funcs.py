@@ -1,7 +1,20 @@
-import os
+'''
+ Created on Wed Oct 16 2019
+
+ Copyright (c) 2019 Smart Gateway
+
+ Made by Philip Andrew Wee De Wang
+'''
 
-#This function is for printing a message for a 16x2 LCD
-def print_msg(msg):
+
+import os
+import multiprocessing
+import time
+import sys
+
+is_rpi = True
+#Check if it is an rpi and set up the environment if so
+try:
     if os.uname().nodename == 'raspberrypi':    
             
         #!/usr/bin/python
@@ -34,8 +47,33 @@ def print_msg(msg):
 
         lcd = character_lcd.Character_LCD_Mono(lcd_rs, lcd_en, lcd_d4, lcd_d5, lcd_d6, lcd_d7, lcd_columns, lcd_rows)
 
+except:
+    is_rpi = False
+
+#This function is for printing a message for a 16x2 LCD
+def print_msg(msg):
+    if is_rpi:
         lcd.message = msg
     else:
         print(msg)
 
-print_msg('Hello world is this too long')
+
+#This function continuously displays the time
+def show_time():
+    while True:
+        print_msg("Time: %s" %time.strftime("%H:%M:%S"))
+        sys.stdout.flush()
+        time.sleep(0.5)
+
+#Create the thread that constant prints the time
+global time_process
+time_process = multiprocessing.Process(target=show_time)
+
+#This function handles the time thread
+def run_time_process(show):
+    if __name__ == "__main__":
+        if show == True:
+            time_process.start()
+        elif show == False:
+            time_process.terminate()
+

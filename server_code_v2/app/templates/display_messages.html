@@ -44,6 +44,14 @@
                         {{ render_field(form.repeat,class = "btn btn-secondary dropdown-toggle") }}
                     </div>
                 </div>
+                <div class="row align-items-center">
+                    <div class="col-sm ">
+                        {{ render_field(form.show_time.label)}}
+                    </div>
+                    <div class="col-sm-9">
+                        {{ render_field(form.show_time,class = "btn btn-secondary dropdown-toggle") }}
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm">
                         {{ render_field(form.submit, class ="btn btn-primary") }}
