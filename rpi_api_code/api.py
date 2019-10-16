@@ -12,6 +12,7 @@ from flask_dance.contrib.github import make_github_blueprint, github
 from flask_cors import CORS
 import sys, os
 import numpy as np
+from display_msg_funcs import print_msg
 #--------------------------------------REQUIREMENTS--------------------------------------
 
 
@@ -22,13 +23,8 @@ CORS(app)
 def display_message():
     #Message details are stored under 'msg' key
     content = request.get_json()
-    output_to_board(content['msg'])
+    print_msg(content['msg'])
     return jsonify({'details':'ok'})
-
-
-def output_to_board(msg):
-    #Place the code for printing on the board here
-    print(msg)
 
 
 if __name__ == '__main__':

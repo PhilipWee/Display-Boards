@@ -1,13 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, DateTimeField, SelectField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Optional
 
 class newMessageForm(FlaskForm):
-    message = TextAreaField('Insert Message Here', validators=[DataRequired()])
-    start_time = DateTimeField('Start Time', validators=[DataRequired()])
-    end_time = DateTimeField('End Time', validators=[DataRequired()])
-    repeat = SelectField('Repeat', choices=[('never', 'Never'),
-                                            ('daily', 'Daily'),
+    msg = TextAreaField('Insert Message Here', validators=[DataRequired()])
+    start_time = DateTimeField('Start Time', validators=[Optional()])
+    end_time = DateTimeField('End Time', validators=[Optional()])
+    repeat = SelectField('Repeat', choices=[('daily', 'Daily'),
+                                            ('never', 'Never'),
                                             ('weekly', 'Weekly'),
                                             ('monthly', 'Monthly'),
                                             ('yearly', 'Yearly')])
