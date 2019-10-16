@@ -63,21 +63,25 @@ class time_handler():
     #This function continuously displays the time
     def show_time_instance(self):
         while True:
-            print_msg("Time: %s" %time.strftime("%H:%M:%S"))
+            if self.show_time_bool == True:
+                print_msg("Time: %s" %time.strftime("%H:%M:%S"))
             sys.stdout.flush()
             time.sleep(0.5)
+            
 
     #Create the thread that constant prints the time
     def __init__(self):
         self.time_process = multiprocessing.Process(target=self.show_time_instance)
+        self.time_process.start()
+        self.show_time_bool = False
 
     #This function handles the time thread
     def show_time(self, show):
         if __name__ == "__main__":
             if show == True:
-                self.time_process.start()
+                self.show_time_bool = True
             elif show == False:
-                self.time_process.terminate()
+                self.show_time_bool = False
 
 
     

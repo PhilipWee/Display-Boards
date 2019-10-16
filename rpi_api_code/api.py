@@ -19,15 +19,13 @@ from display_msg_funcs import print_msg, time_handler
 app = Flask(__name__)
 CORS(app)
 
-#Create a time handle to display the time
-time_handle = time_handler()
+
 
 @app.route('/display_message', methods = ['POST'])
 def display_message():
     #Message details are stored under 'msg' key
     content = request.get_json()
     print_msg(content['msg'])
-
     #If the display time key is true, then run the time display function
     try:
         print('show_time='+content['show_time'])
@@ -47,6 +45,8 @@ def display_message():
 
 
 if __name__ == '__main__':
+    #Create a time handle to display the time
+    time_handle = time_handler()
     #Run the App
     app.run(host='0.0.0.0', debug=True, use_reloader=False,port = 5001)
     
