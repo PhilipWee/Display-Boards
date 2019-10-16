@@ -30,15 +30,16 @@ def display_message():
 
     #If the display time key is true, then run the time display function
     try:
-        print('display_time='+content['display_time'])
-        if content['display_time'] == 'true':
-            time_handle.show_time = True
-            time_handle.show_time_start()
-        elif content['display_time'] == 'false':
-            time_handle.show_time = False
+        print('show_time='+content['show_time'])
+        if content['show_time'] == 'true':
+            time_handle.show_time(True)
+        elif content['show_time'] == 'false':
+            time_handle.show_time(False)
         else:
             #Do not change the current setting
             pass
+    except:
+        pass
 
     return jsonify({'details':'ok'})
 
