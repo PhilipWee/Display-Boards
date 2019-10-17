@@ -11,6 +11,7 @@ import os
 import multiprocessing
 import time
 import sys
+from pymemcache.client import base
 
 is_rpi = True
 #Check if it is an rpi and set up the environment if so
@@ -51,11 +52,17 @@ except:
     is_rpi = False
 
 #This function is for printing a message for a 16x2 LCD
+#Add to this function to handle different display board types
 def print_msg(msg):
     if is_rpi:
         lcd.message = msg
     else:
         print(msg)
+        
+#This function is for clearing the 16x2 LCD
+#Add to this function to handle different display board types
+def clear_lcd():
+    lcd.clear()
 
 
 class time_handler():
@@ -63,8 +70,10 @@ class time_handler():
     #This function continuously displays the time
     def show_time_instance(self):
         while True:
-            if self.show_time_bool == True:
-                print_msg("Time: %s" %time.strftime("%H:%M:%S"))
+            if client.get('show_time_bool') == b'True':
+                print_msg("\n Time: %s" %time.strftime("%H:%M:%S"))            
+            elif client.get('show_time_bool') == b'False':
+                clear_lcd()
             sys.stdout.flush()
             time.sleep(0.5)
             
@@ -72,16 +81,18 @@ class time_handler():
     #Create the thread that constant prints the time
     def __init__(self):
         self.time_process = multiprocessing.Process(target=self.show_time_instance)
-        self.time_process.start()
-        self.show_time_bool = False
+        client.set('show_time_bool',True)
 
     #This function handles the time thread
     def show_time(self, show):
-        if __name__ == "__main__":
-            if show == True:
-                self.show_time_bool = True
-            elif show == False:
-                self.show_time_bool = False
+        if show == True:  
+            client.set('show_time_bool',True)
+        elif show == False:
+            client.set('show_time_bool',False)
+        print(client.get('show_time_bool'))
+
+#Start memcache to store info like whether to display the time, etc
+client = base.Client(('localhost',11211))
 
 
     

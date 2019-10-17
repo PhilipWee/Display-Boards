@@ -13,6 +13,7 @@ from flask_cors import CORS
 import sys, os
 import numpy as np
 from display_msg_funcs import print_msg, time_handler
+from pymemcache.client import base
 #--------------------------------------REQUIREMENTS--------------------------------------
 
 
@@ -47,6 +48,8 @@ def display_message():
 if __name__ == '__main__':
     #Create a time handle to display the time
     time_handle = time_handler()
+    #Manually start the time process
+    time_handle.time_process.start()
     #Run the App
     app.run(host='0.0.0.0', debug=True, use_reloader=False,port = 5001)
     
