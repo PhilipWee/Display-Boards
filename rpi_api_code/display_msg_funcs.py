@@ -13,6 +13,10 @@ import time
 import sys
 from pymemcache.client import base
 
+#------------------------SETTINGS----------------------------------
+character_limit = 16
+#------------------------SETTINGS----------------------------------
+
 is_rpi = True
 #Check if it is an rpi and set up the environment if so
 try:
@@ -55,7 +59,7 @@ except:
 #Add to this function to handle different display board types
 def print_msg(msg):
     if is_rpi:
-        lcd.message = msg
+        client.set('msg',msg)
     else:
         print(msg)
         
@@ -65,15 +69,44 @@ def clear_lcd():
     lcd.clear()
 
 
+#The time handler continuously updates the time or scrolls the message if necessary
 class time_handler():
 
     #This function continuously displays the time
     def show_time_instance(self):
+        msg = ''
+        i = 0
+        scrolling = False
         while True:
+            to_print = ''
+            
+            #Handle the message
+            new_msg = client.get('msg').decode("utf-8")
+            if msg != new_msg:
+                msg = new_msg
+                if len(msg) > character_limit:
+                    scrolling = True
+                else:
+                    scrolling = False
+                    
+            if scrolling == True:
+                to_print += (msg+' '+msg)[i:character_limit+i]
+                i += 1
+                if i>character_limit+1:
+                    i = 0
+            elif scrolling == False:
+                to_print += msg
+            
+            #Handle showing the time
             if client.get('show_time_bool') == b'True':
-                print_msg("\n Time: %s" %time.strftime("%H:%M:%S"))            
+                to_print += "\n Time: %s" %time.strftime("%H:%M:%S")
             elif client.get('show_time_bool') == b'False':
-                clear_lcd()
+                pass
+            
+            print(111111111111111111111)
+            print(to_print)
+            #Set the lcd display
+            lcd.message = to_print
             sys.stdout.flush()
             time.sleep(0.5)
             

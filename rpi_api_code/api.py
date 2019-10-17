@@ -12,7 +12,7 @@ from flask_dance.contrib.github import make_github_blueprint, github
 from flask_cors import CORS
 import sys, os
 import numpy as np
-from display_msg_funcs import print_msg, time_handler
+from display_msg_funcs import print_msg, time_handler, clear_lcd
 from pymemcache.client import base
 #--------------------------------------REQUIREMENTS--------------------------------------
 
@@ -24,6 +24,8 @@ CORS(app)
 
 @app.route('/display_message', methods = ['POST'])
 def display_message():
+    #Clear the lcd
+    clear_lcd()
     #Message details are stored under 'msg' key
     content = request.get_json()
     print_msg(content['msg'])
