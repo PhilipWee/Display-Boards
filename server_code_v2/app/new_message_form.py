@@ -4,8 +4,8 @@ from wtforms.validators import DataRequired, Optional
 
 class newMessageForm(FlaskForm):
     msg = TextAreaField('Insert Message Here', validators=[DataRequired()])
-    start_time = DateTimeField('Start Time', validators=[Optional()])
-    end_time = DateTimeField('End Time', validators=[Optional()])
+    start_time = StringField('Start Time', validators=[Optional()])
+    end_time = StringField('End Time', validators=[Optional()])
     repeat = SelectField('Repeat', choices=[('daily', 'Daily'),
                                             ('never', 'Never'),
                                             ('weekly', 'Weekly'),

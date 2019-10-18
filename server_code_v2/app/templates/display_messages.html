@@ -59,14 +59,18 @@
                 </div>
                 <!-- Insert scripts for the date fields -->
                 <script>
-                    $(function() {
-                        $('input[name="start_time",name="end_time"]').daterangepicker({
-                            singleDatePicker: true,
-                            timePicker: true,
-                            showDropdowns: true,
-                            minYear: 1901,
-                            maxYear: parseInt(moment().format('YYYY'), 10)
-                        }, function(start, end, label) {});
+                    $(function () {
+                        dateinput = ["start_time", "end_time"]
+                        for (var i = 0; i<dateinput.length; i++) {
+                            console.log('input[name="'+dateinput[i]+'"]')
+                            $('input[name="'+dateinput[i]+'"]').daterangepicker({
+                                singleDatePicker: true,
+                                timePicker: true,
+                                showDropdowns: true,
+                                minYear: 1901,
+                                maxYear: parseInt(moment().format('YYYY'), 10)
+                            }, function (start, end, label) { });
+                        }
                     });
                 </script>
 

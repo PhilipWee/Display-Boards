@@ -1,7 +1,7 @@
 from flask import render_template, redirect, request
 from app import app
 from app.new_message_form import newMessageForm
-from app.pg_db_funcs import insert_message
+from app.pg_db_funcs import insert_message, get_calendar_table
 from app.api_call_funcs import inform_api
 
 @app.route('/')
@@ -37,5 +37,11 @@ def display_messages():
         return render_template('display_messages.html',title='Message Configuration Panel', form=form)
     return render_template('display_messages.html',title='Message Configuration Panel', form=form)
 
+#For API call requesting calendar data
+@app.route('/get-calendar-data')
+def get_calendar_data():
+    data = get_calendar_table()
+    jsonified = data.to_json()
+    return jsonified
 
         

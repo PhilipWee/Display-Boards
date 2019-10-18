@@ -74,5 +74,10 @@ def insert_message(msg, start_time = None, end_time = None, repeat= None, import
     crsr.execute(sql)
     conn.commit()
 
+#Get all the calendar data for the messages
+def get_calendar_table():
+    sql = "SELECT * FROM msg_details"
+    result = pd.read_sql(sql,conn)
+    return result
 
   
