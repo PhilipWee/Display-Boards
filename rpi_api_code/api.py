@@ -28,7 +28,8 @@ def display_message():
     clear_lcd()
     #Message details are stored under 'msg' key
     content = request.get_json()
-    print_msg(content['msg'])
+    if content['msg'] != '':
+        print_msg(content['msg'])
     #If the display time key is true, then run the time display function
     try:
         print('show_time='+content['show_time'])

@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% from "_formhelpers.html" import render_field %} {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename = 'css/calendar.css') }}">
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename = 'css/calendar.css') }}"> -->
 <!-- Credit to dangrossman for date time picker -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -7,9 +7,12 @@
 <div class="container">
     <div class="row">
         <div class="col-sm">
-            <div id="calendar_div">
+            {% for table in tables %}
+            {{ table|safe }}
+            {% endfor %}
+            <!-- <div id="calendar_div">
                 <div id="calendar"></div>
-            </div>
+            </div> -->
         </div>
         <div class="col-sm">
             <h1>Create Message</h1>
@@ -61,23 +64,43 @@
                 <script>
                     $(function () {
                         dateinput = ["start_time", "end_time"]
-                        for (var i = 0; i<dateinput.length; i++) {
-                            console.log('input[name="'+dateinput[i]+'"]')
-                            $('input[name="'+dateinput[i]+'"]').daterangepicker({
+                        for (var i = 0; i < dateinput.length; i++) {
+                            console.log('input[name="' + dateinput[i] + '"]')
+                            $('input[name="' + dateinput[i] + '"]').daterangepicker({
                                 singleDatePicker: true,
                                 timePicker: true,
                                 showDropdowns: true,
                                 minYear: 1901,
-                                maxYear: parseInt(moment().format('YYYY'), 10)
+                                maxYear: parseInt(moment().format('YYYY'), 10),
+                                locale: {
+                                    format: "MM/DD/YYYY h:mm A"
+                                }
                             }, function (start, end, label) { });
                         }
                     });
                 </script>
-
             </form>
+            <!-- Make a form for toggling the display of the time -->
+            <form action="" method="post" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="row align-items-center">
+                        <div class="col-sm ">
+                            {{ render_field(showTimeForm.show_time.label)}}
+                        </div>
+                        <div class="col-sm-9">
+                            {{ render_field(showTimeForm.show_time,class = "btn btn-secondary dropdown-toggle") }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            {{ render_field(showTimeForm.submit, class ="btn btn-primary") }}
+                        </div>
+                    </div>
+    
+                </form>
         </div>
     </div>
 </div>
 
-<script src="{{ url_for('static', filename = 'js/calendar.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename = 'js/calendar.js') }}"></script> -->
 {% endblock %}
