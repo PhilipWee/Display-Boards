@@ -28,8 +28,7 @@ def display_message():
     clear_lcd()
     #Message details are stored under 'msg' key
     content = request.get_json()
-    if content['msg'] != '':
-        get_msg(content['msg'])
+    get_msg()
     #If the display time key is true, then run the time display function
     try:
         print('show_time='+content['show_time'])
@@ -53,6 +52,10 @@ if __name__ == '__main__':
     time_handle = time_handler()
     #Manually start the time process
     time_handle.time_process.start()
+    #Update self with the latest message.
+    #Must be done after initialising time handle because time handle resets the message
+    #On initialisation
+    get_msg()
     #Run the App
     app.run(host='0.0.0.0', debug=True, use_reloader=False,port = 5001)
     

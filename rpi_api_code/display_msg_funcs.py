@@ -19,7 +19,7 @@ from math import ceil
 
 #------------------------SETTINGS----------------------------------
 CHARACTERLIMIT = 16
-HOSTURL = '169.254.228.228'
+HOSTURL = 'http://169.254.228.228:5000/get-calendar-data'
 #------------------------SETTINGS----------------------------------
 
 is_rpi = True
@@ -158,10 +158,12 @@ def week_of_month(dt):
 #Create a new function to get the message data table
 def get_message_df(url = HOSTURL):
     try:
+        print('Attempting to retrieve data from', HOSTURL)
         data = pd.read_json(url)
         #Save the data to csv in case the server goes down
         data.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/msg_data.csv')
     except:
+        print('Failed, attempting to read from csv')
         data = pd.read_csv(os.path.dirname(os.path.abspath(__file__)) + '/msg_data.csv')
     
     return data
@@ -169,6 +171,7 @@ def get_message_df(url = HOSTURL):
 #Create a function that determines the message to be displayed
 def get_msg(url = HOSTURL):
     data = get_message_df(url)
+    print(data.head())
     msg_array = []
     #Remove the irrelevant rows
     for row_no,row in data.iterrows():
@@ -212,6 +215,6 @@ def get_msg(url = HOSTURL):
 #Start memcache to store info like whether to display the time, etc
 client = base.Client(('localhost',11211))
 #Intialise by connecting to the host
-get_msg()
+print(get_msg())
 
     
