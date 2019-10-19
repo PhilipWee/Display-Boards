@@ -81,7 +81,10 @@ class time_handler():
             to_print = ''
             
             #Handle the message
-            new_msg = client.get('msg').decode("utf-8")
+            try:
+                new_msg = client.get('msg').decode("utf-8")
+            except:
+                new_msg = ''
             if msg != new_msg:
                 msg = new_msg
                 if len(msg) > character_limit:
@@ -113,9 +116,10 @@ class time_handler():
 
     #Create the thread that constant prints the time
     def __init__(self):
-        self.time_process = multiprocessing.Process(target=self.show_time_instance)
         client.set('show_time_bool',True)
-        client.set('msg',b'')
+        client.set('msg','')
+        self.time_process = multiprocessing.Process(target=self.show_time_instance)
+
 
     #This function handles the time thread
     def show_time(self, show):
