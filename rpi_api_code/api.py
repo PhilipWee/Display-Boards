@@ -12,7 +12,7 @@ from flask_dance.contrib.github import make_github_blueprint, github
 from flask_cors import CORS
 import sys, os
 import numpy as np
-from display_msg_funcs import print_msg, time_handler, clear_lcd
+from display_msg_funcs import get_msg, time_handler, clear_lcd
 from pymemcache.client import base
 #--------------------------------------REQUIREMENTS--------------------------------------
 
@@ -29,7 +29,7 @@ def display_message():
     #Message details are stored under 'msg' key
     content = request.get_json()
     if content['msg'] != '':
-        print_msg(content['msg'])
+        get_msg(content['msg'])
     #If the display time key is true, then run the time display function
     try:
         print('show_time='+content['show_time'])

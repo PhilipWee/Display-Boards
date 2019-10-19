@@ -21,6 +21,7 @@ import time
 
 #This function creates a table table, if it does not yet exist
 def create_table(table_name,table_creation_sql):
+    crsr = conn.cursor()
     #Check if the database exists. If not, create it
     current_tables = pd.read_sql("SELECT * FROM information_schema.tables",conn)
     exists = False
@@ -36,6 +37,7 @@ def create_table(table_name,table_creation_sql):
         print('Done')
     else:
         print(table_name,'already exists, moving on')
+    crsr.close()
 
 #The below function connects to PostgreSQL and also creates the necessary tables, should they be missing
 def connect():
@@ -44,12 +46,10 @@ def connect():
     conn_string = "host="+ Config.PGHOST +" port="+ "5432" +" dbname="+ Config.PGDATABASE +" user=" + Config.PGUSER \
     +" password="+ Config.PGPASSWORD
     global conn
-    global crsr
     conn =psycopg2.connect(conn_string)
     print("Connected!")
-    crsr = conn.cursor()
     #Craft the SQL for making the necessary tables
-    msg_details_sql = 'CREATE TABLE msg_details (id SERIAL, msg CHARACTER(10485760), msg_start_time timestamp, msg_end_time timestamp, importance smallint, board_id smallint, repeat CHARACTER(255), PRIMARY KEY(id));'
+    msg_details_sql = 'CREATE TABLE msg_details (id SERIAL, msg text, msg_start_time timestamp, msg_end_time timestamp, importance smallint, board_id smallint, repeat CHARACTER(255), PRIMARY KEY(id));'
     usr_details_sql = 'CREATE TABLE usr_details (id SERIAL, username CHARACTER(255), board_id_permissions json, PRIMARY KEY(id));'
     display_details_sql = 'CREATE TABLE display_details (id SERIAL, ip_address CHARACTER(255), additional_details json, PRIMARY KEY(id));'
     
@@ -68,11 +68,13 @@ def sql_str(string):
 
 #Add a message to the postgres database
 def insert_message(msg, start_time = None, end_time = None, repeat= None, importance = None, board_id = None):
+    crsr = conn.cursor()
     sql = "INSERT INTO msg_details(msg, msg_start_time, msg_end_time, importance, board_id, repeat) \
         VALUES \
         ("+sql_str(msg)+", "+sql_str(start_time)+","+sql_str(end_time)+","+sql_str(importance)+","+sql_str(board_id)+","+sql_str(repeat)+");"
     crsr.execute(sql)
     conn.commit()
+    crsr.close()
 
 #Get all the calendar data for the messages
 def get_calendar_table():
