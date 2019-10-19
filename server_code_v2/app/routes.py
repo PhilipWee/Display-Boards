@@ -16,6 +16,7 @@ def display_messages():
     showTimeForm = newShowTimeForm()
 
     if request.method == "POST" and showTimeForm.validate():
+        show_time = showTimeForm.show_time.data
         #Send the message for displaying to the RPI
         try:
             inform_api('', 'http://169.254.186.12:5001', show_time=show_time)
@@ -28,7 +29,6 @@ def display_messages():
         start_time = form.start_time.data
         end_time = form.end_time.data
         repeat = form.repeat.data
-        show_time = form.show_time.data
         #Need to include board id and importance function in future
         importance = None
         board_id = None
@@ -42,7 +42,7 @@ def display_messages():
                         board_id=board_id)
         #Send the message for displaying to the RPI
         try:
-            inform_api(msg, 'http://169.254.186.12:5001', show_time=show_time)
+            inform_api(msg, 'http://169.254.186.12:5001')
         except:
             print('Warning: Display board uncontactable.')
 
