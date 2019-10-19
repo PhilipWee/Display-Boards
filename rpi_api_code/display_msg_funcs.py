@@ -115,6 +115,7 @@ class time_handler():
     def __init__(self):
         self.time_process = multiprocessing.Process(target=self.show_time_instance)
         client.set('show_time_bool',True)
+        client.set('msg','')
 
     #This function handles the time thread
     def show_time(self, show):

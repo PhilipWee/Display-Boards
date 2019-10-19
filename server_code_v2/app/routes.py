@@ -50,7 +50,7 @@ def display_messages():
     data = get_calendar_table()
     tables = [data.to_html(classes='data', header="true")]
 
-    return render_template('display_messages.html',title='Message Configuration Panel', form=form,showTimeForm=showTimeForm tables=tables)
+    return render_template('display_messages.html',title='Message Configuration Panel', form=form,showTimeForm=showTimeForm, tables=tables)
 
 #For API call requesting calendar data
 @app.route('/get-calendar-data')

@@ -6,7 +6,7 @@ class newMessageForm(FlaskForm):
     msg = TextAreaField('Insert Message Here', validators=[DataRequired()])
     start_time = StringField('Start Time', validators=[DataRequired()])
     end_time = StringField('End Time', validators=[DataRequired()])
-    repeat = SelectField('Repeat', choices=[('permanantly', 'Permanantly')
+    repeat = SelectField('Repeat', choices=[('permanantly', 'Permanantly'),
                                             ('daily', 'Daily'),
                                             ('never', 'Never'),
                                             ('weekly', 'Weekly'),
