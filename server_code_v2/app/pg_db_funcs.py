@@ -76,6 +76,14 @@ def insert_message(msg, start_time = None, end_time = None, repeat= None, import
     conn.commit()
     crsr.close()
 
+#Remove a message from the postgres database
+def rm_message(id):
+    crsr = conn.cursor()
+    sql = "DELETE FROM msg_details WHERE id = " + str(id)
+    crsr.execute(sql)
+    conn.commit()
+    crsr.close()
+
 #Get all the calendar data for the messages
 def get_calendar_table():
     sql = "SELECT * FROM msg_details"

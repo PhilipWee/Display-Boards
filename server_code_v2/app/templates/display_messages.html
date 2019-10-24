@@ -2,17 +2,44 @@
 <!-- <link rel="stylesheet" href="{{ url_for('static', filename = 'css/calendar.css') }}"> -->
 <!-- Credit to dangrossman for date time picker -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'js/display_messages.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
 <!-- Credit to Paul Navasard for calendar-->
+<br>
 <div class="container">
+    <div class = "row">
+        {% if warning != "" %}
+        <div class="alert alert-warning" role="alert">
+                {{ warning }}
+        </div>
+        {% endif %}
+    </div>
     <div class="row">
         <div class="col-sm">
-            {% for table in tables %}
-            {{ table|safe }}
-            {% endfor %}
-            <!-- <div id="calendar_div">
-                <div id="calendar"></div>
-            </div> -->
+            <table class = "table table-striped">
+                <tr>
+                    {% for col in column_names %}
+                    <th>{{col}}</th>
+                    {% endfor %}
+                </tr>
+                {% for row in row_data %}
+                <tr>
+                    {% for col, row_ in zip(column_names, row) %}
+                    {% if col == link_column %}
+                    <td style="white-space: nowrap;">
+                        <button onclick="delete_msg({{ row_ }})">
+                            X
+                        </button>
+                        {{ row_ }}
+                    </td>
+                    {% else %}
+                    <td>{{row_}}</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
         </div>
         <div class="col-sm">
             <h1>Create Message</h1>

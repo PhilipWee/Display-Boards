@@ -1,63 +1,87 @@
 from flask import render_template, redirect, request
 from app import app
 from app.new_message_form import newMessageForm, newShowTimeForm
-from app.pg_db_funcs import insert_message, get_calendar_table
+from app.pg_db_funcs import insert_message, get_calendar_table, rm_message
 from app.api_call_funcs import inform_api
+
 
 @app.route('/')
 @app.route('/index')
 def index():
-    return redirect('/display-messages', code = 302)
+    return redirect('/display-messages', code=302)
 
 
-@app.route('/display-messages', methods=["GET","POST"])
+@app.route('/display-messages', methods=["GET", "POST"])
 def display_messages():
     form = newMessageForm()
     showTimeForm = newShowTimeForm()
+    # The warning message gets displayed in case of connection issues, etc
+    warning = ""
 
     if request.method == "POST" and showTimeForm.validate():
         show_time = showTimeForm.show_time.data
-        #Send the message for displaying to the RPI
+        # Send the message for displaying to the RPI
         try:
             inform_api('', 'http://169.254.186.12:5001', show_time=show_time)
         except:
             print('Warning: Display board uncontactable.')
 
     if request.method == "POST" and form.validate():
-        #Since the form submission is ok, save the message to the database
+        # Since the form submission is ok, save the message to the database
         msg = form.msg.data
         start_time = form.start_time.data
         end_time = form.end_time.data
         repeat = form.repeat.data
-        #Need to include board id and importance function in future
+        # Need to include board id and importance function in future
         importance = None
         board_id = None
-        
-        #Save the message to postgres
+
+        # Save the message to postgres
         insert_message(msg,
-                        start_time=start_time,
-                        end_time=end_time,
-                        repeat=repeat,
-                        importance=importance,
-                        board_id=board_id)
-        #Send the message for displaying to the RPI
+                       start_time=start_time,
+                       end_time=end_time,
+                       repeat=repeat,
+                       importance=importance,
+                       board_id=board_id)
+        # Send the message for displaying to the RPI
         try:
             inform_api(msg, 'http://169.254.186.12:5001')
+
         except:
             print('Warning: Display board uncontactable.')
+            warning = "Warning: Display board uncontactable. \
+                 Please check the internet connection of the display board. \
+                 The display board will be updated once it regains connection."
 
-    #Get the calendar table
+    # Get the calendar table
     data = get_calendar_table()
-    tables = [data.to_html(classes='data', header="true")]
 
-    return render_template('display_messages.html',title='Message Configuration Panel', form=form,showTimeForm=showTimeForm, tables=tables)
+    return render_template('display_messages.html',
+                           title='Message Configuration Panel',
+                           form=form,
+                           showTimeForm=showTimeForm,
+                           column_names=data.columns.values,
+                           row_data=list(data.values.tolist()),
+                           link_column="id",
+                           zip=zip,
+                           warning=warning)
 
-#For API call requesting calendar data
+# For API call requesting calendar data
 @app.route('/get-calendar-data')
 def get_calendar_data():
-    #Get the calendar table
+    # Get the calendar table
     data = get_calendar_table()
     jsonified = data.to_json()
     return jsonified
 
-        
+# For handling the removal of messages
+@app.route('/delete-msg', methods=["POST"])
+def delete_msg():
+    # Remove the appropriate message from the table 
+    try:
+        rm_message(request.form['id'])
+        print("Successfully removed message")
+        return '0'
+    except:
+        print("Error: Unable to remove message from postgres database")
+        return '1'

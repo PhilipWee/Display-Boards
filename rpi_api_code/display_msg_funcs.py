@@ -165,6 +165,8 @@ def get_message_df(url = HOSTURL):
     except:
         print('Failed, attempting to read from csv')
         data = pd.read_csv(os.path.dirname(os.path.abspath(__file__)) + '/msg_data.csv')
+        data['msg_start_time'] = pd.to_datetime(data['msg_start_time'])
+        data['msg_end_time'] = pd.to_datetime(data['msg_end_time'])
     
     return data
 
