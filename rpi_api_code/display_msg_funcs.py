@@ -83,9 +83,14 @@ class time_handler():
         msg = ''
         i = 0
         scrolling = False
+        current_min = time.time().minute
         while True:
             to_print = ''
-            
+            #If it is a new minute, run get msg
+            if current_min != time.time().minute:
+                current_min = time.time().minute
+                get_msg()
+
             #Handle the message
             try:
                 new_msg = client.get('msg').decode("utf-8").replace('\n','').replace('\r','').strip()
