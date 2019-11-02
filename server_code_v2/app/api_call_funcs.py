@@ -15,11 +15,10 @@ def inform_api(msg, destination_ip_and_port, **kwargs):
         dictToSend[key] = value
     print('Attempting to send post request to ' + destination_ip_and_port + '/display_message')
     res = requests.post(destination_ip_and_port + '/display_message', json=dictToSend)
-    if res.json() == {'details':'ok'}:
-        print('sucessfully called API for display')
+    if res.status_code == 200:
+        print('Success!')
         return 0
     else:
-        print('unsucessful in API call for display')
-        print(res.json())
+        print('Post request failed with status code',res.status_code)
         return 1
     
