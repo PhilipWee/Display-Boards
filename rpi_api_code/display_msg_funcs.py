@@ -88,7 +88,7 @@ class time_handler():
             
             #Handle the message
             try:
-                new_msg = client.get('msg').decode("utf-8").replace('\n','')
+                new_msg = client.get('msg').decode("utf-8").replace('\n','').strip()
             except:
                 new_msg = ''
             if msg != new_msg:
