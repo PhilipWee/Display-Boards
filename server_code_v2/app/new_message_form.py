@@ -28,7 +28,11 @@ class newMessageForm(FlaskForm):
     submit = SubmitField('Create Message')
 
 class newShowTimeForm(FlaskForm):
-    board_id = SelectField('Board ID', choices=[('1','1')])
+    #Get the display boards table
+    display_table = get_display_table()
+    display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
+
+    board_id = SelectField('Board ID', choices=[(key,key) for key in display_dict.keys()], coerce=int)
     show_time = SelectField('Show Time', choices=[('keep_current_setting', 'Keep Current Setting'),
                                             ('true', 'True'),
                                             ('false', 'False')])

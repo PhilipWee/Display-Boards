@@ -23,7 +23,6 @@ def display_messages():
     #Get the display boards table
     display_table = get_display_table()
     display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
-    
 
     if request.method == "POST" and showTimeForm.validate():
         show_time = showTimeForm.show_time.data

@@ -24,7 +24,7 @@ CORS(app)
 
 @app.route('/display_message', methods = ['POST'])
 def display_message():
-    if request.is_json():
+    if request.is_json:
         try:
             json_data = request.get_json()
             if json_data['show_time'] == "True":
