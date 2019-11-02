@@ -20,7 +20,7 @@ from shared.time_check_funcs import check_is_time
 
 #------------------------SETTINGS----------------------------------
 CHARACTERLIMIT = 16
-HOSTURL = 'http://169.254.228.228:5000/'
+HOSTURL = 'http://169.254.228.228:5000'
 #------------------------SETTINGS----------------------------------
 
 is_rpi = True
