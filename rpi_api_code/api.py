@@ -28,7 +28,6 @@ def display_message():
     clear_lcd()
     #Get the latest data from the server
     get_msg()
-
     return jsonify({'details':'ok'})
 
 

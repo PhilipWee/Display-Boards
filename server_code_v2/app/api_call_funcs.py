@@ -20,5 +20,6 @@ def inform_api(msg, destination_ip_and_port, **kwargs):
         return 0
     else:
         print('unsucessful in API call for display')
+        print(res.json())
         return 1
     

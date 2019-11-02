@@ -158,7 +158,17 @@ def delete_msg():
     try:
         rm_message(request.form['id'])
         print("Successfully removed message")
-        return '0'
+        
     except:
         print("Error: Unable to remove message from postgres database")
         return '1'
+    # Tell the rpi that there is an update
+    try:
+        inform_api('message deleted', 'http://169.254.186.12:5001')
+        return '0'
+
+    except:
+        print('Warning: Display board uncontactable.')
+        return '1'
+        
+    
