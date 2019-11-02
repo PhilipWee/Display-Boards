@@ -104,7 +104,7 @@ class time_handler():
             if scrolling == True:
                 to_print += (msg+' '+msg)[i:CHARACTERLIMIT+i]
                 i += 1
-                if i>CHARACTERLIMIT+1:
+                if i>len(msg)+CHARACTERLIMIT+1:
                     i = 0
             elif scrolling == False:
                 to_print += msg

@@ -63,7 +63,7 @@ def sql_str(string):
     if string is None:
         return "NULL"
     else:
-        result = "'"+str(string)+"'"
+        result = "'"+str(string).replace("'","''") +"'"
         return result
 
 #Add a message to the postgres database
