@@ -20,7 +20,7 @@ from shared.time_check_funcs import check_is_time
 
 #------------------------SETTINGS----------------------------------
 CHARACTERLIMIT = 16
-HOSTURL = 'http://169.254.228.228:5000/get-calendar-data'
+HOSTURL = 'http://169.254.228.228:5000/'
 #------------------------SETTINGS----------------------------------
 
 is_rpi = True
@@ -141,6 +141,7 @@ class time_handler():
 
 #Create a new function to get the message data table
 def get_message_df(url = HOSTURL):
+    url = url + '/get-calendar-data'
     try:
         print('Attempting to retrieve data from', HOSTURL)
         data = pd.read_json(url)

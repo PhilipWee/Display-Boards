@@ -1,0 +1,9 @@
+pymemcache==2.2.2
+six==1.12.0
+pandas==0.25.1
+requests==2.22.0
+Flask_Dance==2.2.0
+Flask_Cors==3.0.8
+Flask==1.1.1
+numpy==1.17.2
+board==1.0
