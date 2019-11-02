@@ -88,9 +88,10 @@ class time_handler():
             
             #Handle the message
             try:
-                new_msg = client.get('msg').decode("utf-8").replace('\n','').strip()
+                new_msg = client.get('msg').decode("utf-8").replace('\n','').replace('\r','').strip()
             except:
                 new_msg = ''
+                
             if msg != new_msg:
                 msg = new_msg
                 if len(msg) > CHARACTERLIMIT:
@@ -112,7 +113,7 @@ class time_handler():
             elif client.get('show_time_bool') == b'False':
                 pass
             
-            print('Full Message: ', msg)
+            print('Full Message: ', msg.encode())
             print('Printed Message: ',to_print)
             #Set the lcd display
             lcd.message = to_print
@@ -167,6 +168,7 @@ def get_msg(url = HOSTURL):
     msg_array = sorted(msg_array, key=lambda result:result[1])
     msg = ' '.join([x[0] for x in msg_array])
     client.set('msg',msg)
+    print(msg)
     return msg
 
 #Start memcache to store info like whether to display the time, etc
