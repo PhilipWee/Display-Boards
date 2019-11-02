@@ -92,6 +92,9 @@ class time_handler():
             except:
                 new_msg = ''
                 
+            if msg == '':
+                clear_lcd()
+                
             if msg != new_msg:
                 msg = new_msg
                 if len(msg) > CHARACTERLIMIT:
