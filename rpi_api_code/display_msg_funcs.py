@@ -158,6 +158,9 @@ def get_msg(url = HOSTURL):
     msg_array = []
     #Remove the irrelevant rows
     for row_no,row in data.iterrows():
+        start = row['msg_start_time']
+        end = row['msg_end_time']
+        repeat = row['repeat']
         if check_is_time(start,end,repeat):
             msg_array.append((row['msg'],row['importance']))
     #Sort the messages by importance
