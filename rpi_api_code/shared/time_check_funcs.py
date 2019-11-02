@@ -8,6 +8,7 @@
 
 import datetime
 import calendar
+from six import string_types
 
 #For importing to do test cases
 '''
@@ -103,11 +104,11 @@ def check_is_time(start,end,repeat,time=datetime.datetime.now()):
                 'yearly': check_yearly
                 }
 
-    if start is not None:
+    if isinstance(start,string_types):
         start = start.strip()
-    if end is not None:
+    if isinstance(end,string_types):
         end = end.strip()
-    if repeat is not None:
+    if isinstance(repeat,string_types):
         repeat = repeat.strip()
 
     repeat_type = repeat.split(' ')[0]
