@@ -49,7 +49,7 @@ def connect():
     conn =psycopg2.connect(conn_string)
     print("Connected!")
     #Craft the SQL for making the necessary tables
-    msg_details_sql = 'CREATE TABLE msg_details (id SERIAL, msg text, msg_start_time timestamp, msg_end_time timestamp, importance smallint, board_id smallint, repeat CHARACTER(255), PRIMARY KEY(id));'
+    msg_details_sql = 'CREATE TABLE msg_details (id SERIAL, msg text, msg_start_time text, msg_end_time text, importance smallint, board_id smallint, repeat CHARACTER(255), PRIMARY KEY(id));'
     usr_details_sql = 'CREATE TABLE usr_details (id SERIAL, username CHARACTER(255), board_id_permissions json, PRIMARY KEY(id));'
     display_details_sql = 'CREATE TABLE display_details (id SERIAL, ip_address CHARACTER(255), additional_details json, PRIMARY KEY(id));'
     
