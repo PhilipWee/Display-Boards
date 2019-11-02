@@ -16,6 +16,7 @@ from pymemcache.client import base
 import requests
 import pandas as pd
 from math import ceil
+from shared.time_check_funcs import check_is_time
 
 #------------------------SETTINGS----------------------------------
 CHARACTERLIMIT = 16
@@ -134,26 +135,6 @@ class time_handler():
             client.set('show_time_bool',False)
         print(client.get('show_time_bool'))
 
-#Check that the now time is within the start and end
-def check_within(start_time,end_time,now_time):
-    if start_time <= end_time:
-        return start_time <= now_time <= end_time
-    else:
-        return start_time <= now_time or now_time <= end_time
-
-
-
-def week_of_month(dt):
-    """ Returns the week of the month for the specified date.
-    """
-
-    first_day = dt.replace(day=1)
-
-    dom = dt.day
-    adjusted_dom = dom + first_day.weekday()
-
-    return int(ceil(adjusted_dom/7.0))
-
 
 #Create a new function to get the message data table
 def get_message_df(url = HOSTURL):
@@ -177,36 +158,10 @@ def get_msg(url = HOSTURL):
     msg_array = []
     #Remove the irrelevant rows
     for row_no,row in data.iterrows():
-        is_permanent = is_time = is_day = is_week = is_date = False
-        #We will keep all permanent rows
-        if row['repeat'].strip() == 'permanantly':
-            is_permanent = True
-        #Check that the time is within the correct range
-        if row['repeat'].strip() in ['daily', 'weekly', 'monthly', 'yearly']:
-            start_time = row['msg_start_time'].time()
-            end_time = row['msg_end_time'].time()
-            now_time = datetime.now().time()
-            is_time = check_within(start_time,end_time,now_time)
-            #If it is weekly, check the day is correct
-            if row['repeat'].strip() == 'weekly':
-                start_day = row['msg_start_time'].weekday()
-                end_day = row['msg_end_time'].weekday()
-                now_day = datetime.now().weekday()
-                is_day = check_within(start_day,end_day,now_day)
-            #If it is monthly check the week is correct
-            if row['repeat'].strip() == 'monthly':
-                start_week = week_of_month(row['msg_start_time'])
-                end_week = week_of_month(row['msg_end_time'])
-                now_week = week_of_month(datetime.now())
-                is_week = check_within(start_week,end_week,now_week)
-            #If it is yearly check the date is correct
-            if row['repeat'].strip() == 'yearly':
-                start_date = row['msg_start_time'].date()
-                end_date = row['msg_end_time'].date()
-                now_date = datetime.now().date()
-                is_date = check_within(start_date,end_date,now_date)
-        #Add the relevant messages to the message array
-        if True in (is_permanent,is_time,is_day,is_week,is_date):
+        start = row['msg_start_time'].strip()
+        end = row['msg_end_time'].strip()
+        repeat = row['repeat'].strip()
+        if check_is_time(start,end,repeat):
             msg_array.append((row['msg'],row['importance']))
     #Sort the messages by importance
     msg_array = sorted(msg_array, key=lambda result:result[1])

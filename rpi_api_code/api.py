@@ -26,21 +26,8 @@ CORS(app)
 def display_message():
     #Clear the lcd
     clear_lcd()
-    #Message details are stored under 'msg' key
-    content = request.get_json()
+    #Get the latest data from the server
     get_msg()
-    #If the display time key is true, then run the time display function
-    try:
-        print('show_time='+content['show_time'])
-        if content['show_time'] == 'true':
-            time_handle.show_time(True)
-        elif content['show_time'] == 'false':
-            time_handle.show_time(False)
-        else:
-            #Do not change the current setting
-            pass
-    except:
-        pass
 
     return jsonify({'details':'ok'})
 
