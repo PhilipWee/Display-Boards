@@ -24,6 +24,16 @@ CORS(app)
 
 @app.route('/display_message', methods = ['POST'])
 def display_message():
+    if request.is_json():
+        try:
+            json_data = request.get_json()
+            if json_data['show_time'] == "True":
+                time_handle.show_time(True)
+            elif json_data['show_time'] == "False":
+                time_handle.show_time(False)
+        except:
+            print('Error in parsing json time data')
+
     #Clear the lcd
     clear_lcd()
     #Get the latest data from the server

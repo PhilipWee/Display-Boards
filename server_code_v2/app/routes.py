@@ -1,8 +1,10 @@
 from flask import render_template, redirect, request
 from app import app
 from app.new_message_form import newMessageForm, newShowTimeForm
-from app.pg_db_funcs import insert_message, get_calendar_table, rm_message
+from app.new_display_board_form import newDisplayBoardForm
+from app.pg_db_funcs import *
 from app.api_call_funcs import inform_api
+
 
 
 @app.route('/')
@@ -18,11 +20,17 @@ def display_messages():
     # The warning message gets displayed in case of connection issues, etc
     warning = ""
 
+    #Get the display boards table
+    display_table = get_display_table()
+    display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
+    
+
     if request.method == "POST" and showTimeForm.validate():
         show_time = showTimeForm.show_time.data
+        board_id = showTimeForm.board_id.data
         # Send the message for displaying to the RPI
         try:
-            inform_api('', 'http://169.254.186.12:5001', show_time=show_time)
+            inform_api('', 'http://' + display_dict[board_id] + ':5001', show_time=show_time)
         except:
             print('Warning: Display board uncontactable.')
 
@@ -122,7 +130,7 @@ def display_messages():
         
         # Send the message for displaying to the RPI
         try:
-            inform_api(msg, 'http://169.254.186.12:5001')
+            inform_api(msg, 'http://' + display_dict[board_id] + ':5001')
 
         except:
             print('Warning: Display board uncontactable.')
@@ -132,6 +140,8 @@ def display_messages():
 
     # Get the calendar table
     data=get_calendar_table()
+
+    
 
     return render_template('display_messages.html',
                            title = 'Message Configuration Panel',
@@ -143,32 +153,93 @@ def display_messages():
                            zip = zip,
                            warning = warning)
 
+@app.route('/manage-display-boards', methods=["GET", "POST"])
+
+def manage_display_boards():
+    form = newDisplayBoardForm()
+    # The warning message gets displayed in case of connection issues, etc
+    warning = ""
+
+    if request.method == "POST" and form.validate():
+        # Since the form submission is ok, save the display board details to the database
+        target_address = form.target_address.data
+        additional_details = form.details.data
+
+        # Insert the data into the database
+        add_display_board(target_address,additional_details=additional_details)
+
+    # Get the calendar table
+    data=get_display_table()
+
+    return render_template('manage_display_boards.html',
+                           title = 'Message Configuration Panel',
+                           form = form,
+                           column_names = data.columns.values,
+                           row_data = list(data.values.tolist()),
+                           link_column = "id",
+                           zip = zip,
+                           warning = warning)
+
 # For API call requesting calendar data
 @app.route('/get-calendar-data')
 def get_calendar_data():
     # Get the calendar table
     data=get_calendar_table()
+    #Get the display boards table
+    display_table = get_display_table()
+    display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
+    #Slice it to only get those values relevant for the display board in question
+    data['target_address'] = pd.Series(display_dict[id] for id in data['board_id'])
+    data = data[data['target_address'] == request.remote_addr]
+
     jsonified=data.to_json()
     return jsonified
 
 # For handling the removal of messages
 @app.route('/delete-msg', methods = ["POST"])
 def delete_msg():
+    #Get the display boards table
+    display_table = get_display_table()
+    display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
+
+    # Get the calendar table
+    data=get_calendar_table()
+    print(request.form['id'])
+    print(data)
+    #Get the board id from the message id
+    board_id = data[data['id'] == int(request.form['id'])]['board_id'].values[0]
+    print(board_id)
+    
+    
     # Remove the appropriate message from the table
     try:
         rm_message(request.form['id'])
-        print("Successfully removed message")
         
     except:
         print("Error: Unable to remove message from postgres database")
         return '1'
     # Tell the rpi that there is an update
     try:
-        inform_api('message deleted', 'http://169.254.186.12:5001')
+        inform_api('message deleted', 'http://' + display_dict[board_id] + ':5001')
         return '0'
 
     except:
         print('Warning: Display board uncontactable.')
         return '1'
+
+# For handling the removal of display boards
+@app.route('/delete-display-board', methods = ["POST"])
+def delete_display_board():
+    print(request.form['id'])
+    # Remove the appropriate message from the table
+    try:
+        rm_display_board(request.form['id'])
+        print("Successfully removed display board")
+        return '0'
+        
+    except:
+        print("Error: Unable to remove display board from postgres database")
+        return '1'
+
         
     

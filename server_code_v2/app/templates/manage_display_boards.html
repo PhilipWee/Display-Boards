@@ -1,0 +1,83 @@
+{% extends "base.html" %} {% from "_formhelpers.html" import render_field %} {% block content %}
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename = 'css/calendar.css') }}"> -->
+<!-- Credit to dangrossman for date time picker -->
+<!-- Credit to fengyuanchen for time picker -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'js/display_messages.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link href="{{ url_for('static', filename = 'css/picker.min.css') }}" rel="stylesheet">
+<script src="{{ url_for('static', filename = 'js/picker.min.js') }}"></script>
+<!-- Credit to Paul Navasard for calendar-->
+<br>
+<div class="container">
+    <div class="row">
+        {% if warning != "" %}
+        <div class="alert alert-warning" role="alert">
+            {{ warning }}
+        </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <table class="table table-striped">
+                <tr>
+                    {% for col in column_names %}
+                    <th>{{col}}</th>
+                    {% endfor %}
+                </tr>
+                {% for row in row_data %}
+                <tr>
+                    {% for col, row_ in zip(column_names, row) %}
+                    {% if col == link_column %}
+                    <td style="white-space: nowrap;">
+                        <button onclick="delete_display_board({{ row_ }})">
+                            X
+                        </button>
+                        {{ row_ }}
+                    </td>
+                    {% else %}
+                    <td>{{row_}}</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="col-sm">
+            <h1>Create Message</h1>
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+
+                <!-- IP Address -->
+                <div class="row align-items-center whole-day-no">
+                    <div class="col-sm ">
+                        {{ render_field(form.target_address.label)}}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ render_field(form.target_address, class="form-control js-time-picker") }}
+                    </div>
+                </div>
+                <!-- Details -->
+                <div class="row align-items-center whole-day-no">
+                    <div class="col-sm ">
+                        {{ render_field(form.details.label)}}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ render_field(form.details, class="form-control js-time-picker") }}
+                    </div>
+                </div>
+                
+
+                <!-- Submit Button -->
+                <div class="row">
+                    <div class="col-sm">
+                        {{ render_field(form.submit, class ="btn btn-primary") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- <script src="{{ url_for('static', filename = 'js/calendar.js') }}"></script> -->
+{% endblock %}

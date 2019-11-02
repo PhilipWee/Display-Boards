@@ -45,6 +45,7 @@
         </div>
         <div class="col-sm">
             <h1>Create Message</h1>
+            <br>
             <form action="" method="post" novalidate>
                 {{ form.hidden_tag() }}
                 <!-- BoardID -->
@@ -227,9 +228,22 @@
                     });
                 </script>
             </form>
+            <hr/>
+            <h2>Toggle Time Display</h2>
+            <br>
             <!-- Make a form for toggling the display of the time -->
             <form action="" method="post" novalidate>
                 {{ form.hidden_tag() }}
+                <!-- BoardID -->
+                <div class="row">
+                    <div class="col-sm ">
+                        {{ render_field(form.board_id.label)}}
+                    </div>
+                    <div class="col-sm-8">
+                        {{ render_field(form.board_id, class="btn btn-secondary dropdown-toggle") }}
+                    </div>
+                </div>
+                <!-- Show time -->
                 <div class="row align-items-center">
                     <div class="col-sm ">
                         {{ render_field(showTimeForm.show_time.label)}}

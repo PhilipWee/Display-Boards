@@ -51,7 +51,7 @@ def connect():
     #Craft the SQL for making the necessary tables
     msg_details_sql = 'CREATE TABLE msg_details (id SERIAL, msg text, msg_start_time text, msg_end_time text, importance smallint, board_id smallint, repeat CHARACTER(255), PRIMARY KEY(id));'
     usr_details_sql = 'CREATE TABLE usr_details (id SERIAL, username CHARACTER(255), board_id_permissions json, PRIMARY KEY(id));'
-    display_details_sql = 'CREATE TABLE display_details (id SERIAL, ip_address CHARACTER(255), additional_details json, PRIMARY KEY(id));'
+    display_details_sql = 'CREATE TABLE display_details (id SERIAL, ip_address CHARACTER(255), additional_details text, PRIMARY KEY(id));'
     
     #Make the tables
     create_table('msg_details',msg_details_sql)
@@ -76,6 +76,16 @@ def insert_message(msg, start_time = None, end_time = None, repeat= None, import
     conn.commit()
     crsr.close()
 
+#Add a display board to the postgres database
+def add_display_board(ip_address, additional_details = None):
+    crsr = conn.cursor()
+    sql = "INSERT INTO display_details(ip_address, additional_details) \
+        VALUES \
+        ("+sql_str(ip_address)+", "+sql_str(additional_details)+");"
+    crsr.execute(sql)
+    conn.commit()
+    crsr.close()
+
 #Remove a message from the postgres database
 def rm_message(id):
     crsr = conn.cursor()
@@ -84,9 +94,23 @@ def rm_message(id):
     conn.commit()
     crsr.close()
 
+#Remove a display board from the postgres database
+def rm_display_board(id):
+    crsr = conn.cursor()
+    sql = "DELETE FROM display_details WHERE id = " + str(id)
+    crsr.execute(sql)
+    conn.commit()
+    crsr.close()
+
 #Get all the calendar data for the messages
 def get_calendar_table():
     sql = "SELECT * FROM msg_details"
+    result = pd.read_sql(sql,conn)
+    return result
+
+#Get all the display board detail
+def get_display_table():
+    sql = "SELECT * FROM display_details"
     result = pd.read_sql(sql,conn)
     return result
 

@@ -1,9 +1,14 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, DateTimeField, SelectField, SelectMultipleField
 from wtforms.validators import DataRequired, Optional
+from app.pg_db_funcs import get_display_table
 
 class newMessageForm(FlaskForm):
-    board_id = SelectField('Board ID', choices=[('1','1')])
+    #Get the display boards table
+    display_table = get_display_table()
+    display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
+
+    board_id = SelectField('Board ID', choices=[(key,key) for key in display_dict.keys()], coerce=int)
     importance = SelectField('Importance', choices = [(str(i),str(i)) for i in range(0,10)])
     msg = TextAreaField('Insert Message Here')
     start_time = StringField('Start Time')
@@ -23,6 +28,7 @@ class newMessageForm(FlaskForm):
     submit = SubmitField('Create Message')
 
 class newShowTimeForm(FlaskForm):
+    board_id = SelectField('Board ID', choices=[('1','1')])
     show_time = SelectField('Show Time', choices=[('keep_current_setting', 'Keep Current Setting'),
                                             ('true', 'True'),
                                             ('false', 'False')])
