@@ -83,13 +83,17 @@ class time_handler():
         msg = ''
         i = 0
         scrolling = False
-        current_min = time.time().minute
+        current_min = datetime.now().minute
         while True:
             to_print = ''
             #If it is a new minute, run get msg
-            if current_min != time.time().minute:
-                current_min = time.time().minute
-                get_msg()
+            if current_min != datetime.now().minute:
+                current_min = datetime.now().minute
+                try:
+                    #Sometimes does not work due to threading. Hence try except block
+                    get_msg()
+                except:
+                    pass
 
             #Handle the message
             try:
@@ -99,8 +103,7 @@ class time_handler():
                 
             if msg != new_msg:
                 msg = new_msg
-                if msg == '':
-                    clear_lcd()
+                clear_lcd()
                 if len(msg) > CHARACTERLIMIT:
                     scrolling = True
                 else:
@@ -149,14 +152,13 @@ def get_message_df(url = HOSTURL):
     url = url + '/get-calendar-data'
     try:
         print('Attempting to retrieve data from', HOSTURL)
-        data = pd.read_json(url)
+        data = pd.read_json(url, convert_dates = False)
+        print(data['msg_start_time'])
         #Save the data to csv in case the server goes down
         data.to_csv(os.path.dirname(os.path.abspath(__file__)) + '/msg_data.csv')
     except:
         print('Failed, attempting to read from csv')
         data = pd.read_csv(os.path.dirname(os.path.abspath(__file__)) + '/msg_data.csv')
-        data['msg_start_time'] = pd.to_datetime(data['msg_start_time'])
-        data['msg_end_time'] = pd.to_datetime(data['msg_end_time'])
     
     return data
 
@@ -164,6 +166,7 @@ def get_message_df(url = HOSTURL):
 def get_msg(url = HOSTURL):
     data = get_message_df(url)
     print(data.head())
+    
     msg_array = []
     #Remove the irrelevant rows
     for row_no,row in data.iterrows():
