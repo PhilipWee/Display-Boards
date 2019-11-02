@@ -25,11 +25,12 @@ CORS(app)
 @app.route('/display_message', methods = ['POST'])
 def display_message():
     if request.is_json:
+        print(request.get_json())
         try:
             json_data = request.get_json()
-            if json_data['show_time'] == "True":
+            if json_data['show_time'] == "true":
                 time_handle.show_time(True)
-            elif json_data['show_time'] == "False":
+            elif json_data['show_time'] == "false":
                 time_handle.show_time(False)
         except:
             print('Error in parsing json time data')
