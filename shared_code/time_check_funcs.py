@@ -102,6 +102,14 @@ def check_is_time(start,end,repeat,time=datetime.datetime.now()):
                 'monthly':check_monthly,
                 'yearly': check_yearly
                 }
+                
+    if start is not None:
+        start = start.strip()
+    if end is not None:
+        end = end.strip()
+    if repeat is not None:
+        repeat = repeat.stip()
+
     repeat_type = repeat.split(' ')[0]
     return func_dict[repeat_type](start,end,repeat,time=time)
 
