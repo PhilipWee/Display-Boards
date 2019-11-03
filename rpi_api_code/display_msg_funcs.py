@@ -89,11 +89,9 @@ class time_handler():
             #If it is a new minute, run get msg
             if current_min != datetime.now().minute:
                 current_min = datetime.now().minute
-                try:
-                    #Sometimes does not work due to threading. Hence try except block
-                    get_msg()
-                except:
-                    pass
+                #Sometimes does not work due to threading. Hence try except block
+                get_msg()
+
 
             #Handle the message
             try:
@@ -173,11 +171,12 @@ def get_msg(url = HOSTURL):
         start = row['msg_start_time']
         end = row['msg_end_time']
         repeat = row['repeat']
-        if check_is_time(start,end,repeat):
+        #Make sure the time of the function is updated as of the time of running the function
+        if check_is_time(start,end,repeat,time = datetime.now()):
             msg_array.append((row['msg'],row['importance']))
     #Sort the messages by importance
     msg_array = sorted(msg_array, key=lambda result:result[1])
-    msg = ' '.join([x[0] for x in msg_array])
+    msg = ' '.join([str(x[0]) for x in msg_array])
     client.set('msg',msg)
     print(msg)
     return msg
