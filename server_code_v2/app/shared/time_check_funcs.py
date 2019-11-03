@@ -29,7 +29,7 @@ def convert_time_to_dttime(string):
     return datetime.datetime.strptime(string,'%H:%M').time()
 
 def convert_dtstr_to_dttime(string):
-    return datetime.datetime.strptime(string,'%m/%d/%Y %H:%M %p')
+    return datetime.datetime.strptime(string,'%m/%d/%Y %I:%M %p')
 
 #Check for whether to display the message for 'permanant'
 def check_perma(start,end,repeat,time=datetime.datetime.now()):
@@ -110,7 +110,7 @@ def check_is_time(start,end,repeat,time=datetime.datetime.now()):
         end = end.strip()
     if isinstance(repeat,string_types):
         repeat = repeat.strip()
-
+    
     repeat_type = repeat.split(' ')[0]
     return func_dict[repeat_type](start,end,repeat,time=time)
 
@@ -123,7 +123,7 @@ assert check_is_time(*test_cases[2], time = datetime.datetime(2020, 5, 17, 14, 1
 assert check_is_time(*test_cases[2], time = datetime.datetime(2020, 5, 17, 14, 13)) == True
 #never
 assert check_is_time(*test_cases[3], time = datetime.datetime(2019, 10, 31, 14, 13)) == False
-assert check_is_time(*test_cases[3], time = datetime.datetime(2019, 10, 31, 12, 00)) == True
+assert check_is_time(*test_cases[3], time = datetime.datetime(2019, 10, 31, 00, 00)) == True
 #weekly
 assert check_is_time(*test_cases[4], time = datetime.datetime(2019, 11, 1, 12, 00)) == True
 assert check_is_time(*test_cases[4], time = datetime.datetime(2019, 11, 2, 12, 00)) == False
