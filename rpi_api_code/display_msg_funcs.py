@@ -124,7 +124,6 @@ class time_handler():
             print('Full Message: ', msg.encode())
             print('Printed Message: ',to_print)
             #Set the lcd display
-            lcd.message = to_print
             sys.stdout.flush()
             time.sleep(0.5)
             
@@ -177,8 +176,8 @@ def get_msg(url = HOSTURL):
     #Sort the messages by importance
     msg_array = sorted(msg_array, key=lambda result:result[1])
     msg = ' '.join([str(x[0]) for x in msg_array])
-    client.set('msg',msg)
-    print(msg)
+    client.set('msg',msg.encode('ascii',errors='ignore'))
+    #print(msg)
     return msg
 
 #Start memcache to store info like whether to display the time, etc
