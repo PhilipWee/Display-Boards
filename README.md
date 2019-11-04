@@ -6,27 +6,8 @@ Design and develop a Dynamic text display on LED panels modified and  controlled
 # Installation instructions
 
 ### Database And Server Setup (Preferably both on same system)
-1. Install PostgreSQL 11 and pgAdmin4 (OS does not really matter, use linux distro if scalability with containers is the intention)
-2. Ensure during the installation you keep track of the following information:
-    * IP Address / Domain of database server
-    * Username
-    * Password
-3. Using pgAdmin4, create a database called ```display_msg_details```
-1. Install Python3 
-    * Preferably 64 bit for future scalability to do data processing, but 32 bit is fine
-    * Make sure python is added to PATH on installation
-2. Open Terminal / CMD prompt
-3. Change the directory to the desired installation location
-4. Clone the repository using ```git clone https://github.com/SirGreat/Display-Boards.git```
-5. Enter the directory with ```cd Display-Boards```
-6. Activate the virtual environment with ```source env/bin/activate```
-6. Enter the server code directory with ```cd server_code_v2```
-7. Install the python dependencies using ```pip install -r requirements.txt```
-8. Configure the ```config.py``` file with the settings identified during the database setup
-9. Install Flask with ```sudo apt install python3-flask```
-8. Run the code using ```flask run -h 0.0.0.0```
-9. Configure port forwarding and open ports as required (For testing only port 5000 needs to be opened)
-10. Record down the IP address of the server for the RPI setup
+1. Install docker according to your system requirements
+2. Run the app using ```docker run -it -p 5000:5000 philipandrewweedewang/display-boards:latest```
 
 ### RPI Setup
 1. Setup the RPI with the OS Raspbian

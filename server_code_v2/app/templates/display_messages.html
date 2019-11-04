@@ -49,115 +49,115 @@
             <form action="" method="post" novalidate>
                 {{ form.hidden_tag() }}
                 <!-- BoardID -->
-                <div class="row">
+                <div class="row mb-1">
                     <div class="col-sm ">
-                        {{ render_field(form.board_id.label)}}
+                        {{ form.board_id.label}}
                     </div>
                     <div class="col-sm-8">
-                        {{ render_field(form.board_id, class="btn btn-secondary dropdown-toggle") }}
+                        {{ form.board_id( class="btn btn-secondary dropdown-toggle") }}
                     </div>
                 </div>
                 <!-- Importance -->
-                <div class="row">
+                <div class="row mb-1">
                     <div class="col-sm ">
-                        {{ render_field(form.importance.label)}}
+                        {{ form.importance.label}}
                     </div>
                     <div class="col-sm-8">
-                        {{ render_field(form.importance, class="btn btn-secondary dropdown-toggle") }}
+                        {{ form.importance( class="btn btn-secondary dropdown-toggle") }}
                     </div>
                 </div>
                 <!-- Insert Message -->
-                <div class="row">
+                <div class="row mb-1">
                     <div class="col-sm">
-                        {{ render_field(form.msg, class="md-textarea form-control", placeholder = "Insert Message Here...") }}
+                        {{ form.msg(class="md-textarea form-control", placeholder = "Insert Message Here...") }}
                     </div>
                 </div>
                 <!-- Repeat -->
-                <div class="row align-items-center">
+                <div class="row mb-1 align-items-center">
                     <div class="col-sm ">
-                        {{ render_field(form.repeat.label)}}
+                        {{ form.repeat.label}}
                     </div>
                     <div class="col-sm-8">
-                        {{ render_field(form.repeat,class = "btn btn-secondary dropdown-toggle") }}
+                        {{ form.repeat(class = "btn btn-secondary dropdown-toggle") }}
                     </div>
                 </div>
                 <!-- Start Time -->
-                <div class="row align-items-center whole-day-no">
+                <div class="row mb-1 align-items-center whole-day-no">
                     <div class="col-sm ">
-                        {{ render_field(form.start_time.label)}}
+                        {{ form.start_time.label}}
                     </div>
                     <div class="col-sm-8">
-                        {{ render_field(form.start_time, class="form-control js-time-picker") }}
+                        {{ form.start_time( class="form-control js-time-picker") }}
                     </div>
                 </div>
                 <!-- End Time -->
-                <div class="row align-items-center whole-day-no">
+                <div class="row mb-1 align-items-center whole-day-no">
                     <div class="col-sm ">
-                        {{ render_field(form.end_time.label)}}
+                        {{ form.end_time.label}}
                     </div>
                     <div class="col-sm-8">
-                        {{ render_field(form.end_time, class="form-control js-time-picker") }}
+                        {{ form.end_time( class="form-control js-time-picker") }}
                     </div>
                 </div>
                 <!-- Once On From -->
-                <div class="row align-items-center never">
+                <div class="row mb-1 align-items-center never">
                     <div class="col-sm ">
-                        {{ render_field(form.once_on_from.label)}}
+                        {{ form.once_on_from.label}}
                     </div>
                     <div class="col-sm-8">
-                        {{ render_field(form.once_on_from, class="form-control") }}
+                        {{ form.once_on_from( class="form-control") }}
                     </div>
                 </div>
                 <!-- Once On To -->
-                <div class="row align-items-center never">
+                <div class="row mb-1 align-items-center never">
                     <div class="col-sm ">
-                        {{ render_field(form.once_on_to.label)}}
+                        {{ form.once_on_to.label}}
                     </div>
                     <div class="col-sm-8">
-                        {{ render_field(form.once_on_to, class="form-control") }}
+                        {{ form.once_on_to( class="form-control") }}
                     </div>
                 </div>
                 <!-- Week days -->
-                <div class="row align-items-center weekly">
+                <div class="row mb-1 align-items-center weekly">
                     <div class="col-sm ">
-                        {{ render_field(form.week_days.label)}}
+                        {{ form.week_days.label}}
                     </div>
                     <div class="col-sm-6">
-                        {{ render_field(form.week_days,class = "btn btn-secondary") }}
+                        {{ form.week_days(class = "btn btn-secondary") }}
                     </div>
                 </div>
                 <!-- Whole day -->
-                <div class="row align-items-center weekly daily monthly yearly">
+                <div class="row mb-1 align-items-center weekly daily monthly yearly">
                     <div class="col-sm ">
-                        {{ render_field(form.whole_day.label)}}
+                        {{ form.whole_day.label}}
                     </div>
                     <div class="col-sm-8">
-                        {{ render_field(form.whole_day,class = "btn btn-secondary dropdown-toggle") }}
+                        {{ form.whole_day(class = "btn btn-secondary dropdown-toggle") }}
                     </div>
                 </div>
                 <!-- Day Selector -->
-                <div class="row align-items-center monthly yearly">
+                <div class="row mb-1 align-items-center monthly yearly">
                     <div class="col-sm ">
-                        {{ render_field(form.day_select.label)}}
+                        {{ form.day_select.label}}
                     </div>
                     <div class="col-sm-6">
-                        {{ render_field(form.day_select,class = "btn btn-secondary") }}
+                        {{ form.day_select(class = "btn btn-secondary") }}
                     </div>
                 </div>
                 <!-- Month Selector -->
-                <div class="row align-items-center yearly">
+                <div class="row mb-1 align-items-center yearly">
                     <div class="col-sm ">
-                        {{ render_field(form.month_select.label)}}
+                        {{ form.month_select.label}}
                     </div>
                     <div class="col-sm-8">
-                        {{ render_field(form.month_select,class = "btn btn-secondary") }}
+                        {{ form.month_select(class = "btn btn-secondary") }}
                     </div>
                 </div>
 
                 <!-- Submit Button -->
-                <div class="row">
+                <div class="row mb-1">
                     <div class="col-sm">
-                        {{ render_field(form.submit, class ="btn btn-primary") }}
+                        {{ form.submit(class ="btn btn-primary") }}
                     </div>
                 </div>
                 <!-- Insert scripts for the date fields -->
@@ -235,26 +235,26 @@
             <form action="" method="post" novalidate>
                 {{ showTimeForm.hidden_tag() }}
                 <!-- BoardID -->
-                <div class="row">
+                <div class="row mb-1">
                     <div class="col-sm ">
-                        {{ render_field(showTimeForm.board_id.label)}}
+                        {{ showTimeForm.board_id.label }}
                     </div>
                     <div class="col-sm-8">
-                        {{ render_field(showTimeForm.board_id, class="btn btn-secondary dropdown-toggle") }}
+                        {{ showTimeForm.board_id(class="btn btn-secondary dropdown-toggle") }}
                     </div>
                 </div>
                 <!-- Show time -->
-                <div class="row align-items-center">
+                <div class="row mb-1 align-items-center">
                     <div class="col-sm ">
-                        {{ render_field(showTimeForm.show_time.label)}}
+                        {{ showTimeForm.show_time.label}}
                     </div>
                     <div class="col-sm-8">
-                        {{ render_field(showTimeForm.show_time,class = "btn btn-secondary dropdown-toggle") }}
+                        {{ showTimeForm.show_time(class = "btn btn-secondary dropdown-toggle") }}
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-1">
                     <div class="col-sm">
-                        {{ render_field(showTimeForm.submit, class ="btn btn-primary") }}
+                        {{ showTimeForm.submit(class ="btn btn-primary") }}
                     </div>
                 </div>
 

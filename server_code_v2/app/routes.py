@@ -20,9 +20,10 @@ def display_messages():
     # The warning message gets displayed in case of connection issues, etc
     warning = ""
 
-    #Get the display boards table
+    #Get the display boards table to populate the board id
     display_table = get_display_table()
     display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
+    form.board_id.choices = [(key,key) for key in display_dict.keys()]
 
     if request.method == "POST" and showTimeForm.validate():
         show_time = showTimeForm.show_time.data

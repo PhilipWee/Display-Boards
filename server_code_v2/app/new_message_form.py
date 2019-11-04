@@ -4,11 +4,9 @@ from wtforms.validators import DataRequired, Optional
 from app.pg_db_funcs import get_display_table
 
 class newMessageForm(FlaskForm):
-    #Get the display boards table
-    display_table = get_display_table()
-    display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
 
-    board_id = SelectField('Board ID', choices=[(key,key) for key in display_dict.keys()], coerce=int)
+
+    board_id = SelectField('Board ID', choices=[], coerce=int)
     importance = SelectField('Importance', choices = [(str(i),str(i)) for i in range(0,10)])
     msg = TextAreaField('Insert Message Here')
     start_time = StringField('Start Time')
