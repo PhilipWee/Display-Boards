@@ -9,9 +9,6 @@ RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-k
 RUN apt-get update
 RUN apt-get install postgresql postgresql-contrib --assume-yes
 USER postgres
-RUN /etc/init.d/postgresql start &&\
-psql --command "CREATE USER admin WITH SUPERUSER PASSWORD 'admin123';" &&\
-createdb -O admin display_msg_details
 USER root
 RUN apt-get install python3-flask --assume-yes
 RUN apt-get install python3-pip --assume-yes
@@ -34,6 +31,9 @@ RUN echo "listen_addresses='*'" >> /etc/postgresql/10/main/postgresql.conf
 #Expose the necessary port
 EXPOSE 5000
 #Make the command that runs on start
-CMD /etc/init.d/postgresql start && flask run -h 0.0.0.0
+CMD /etc/init.d/postgresql start &&\
+psql --command "CREATE USER admin WITH SUPERUSER PASSWORD 'admin123';" &&\
+createdb -O admin display_msg_details &&\
+/etc/init.d/postgresql start && flask run -h 0.0.0.0
 
 
