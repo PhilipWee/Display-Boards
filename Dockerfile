@@ -30,10 +30,15 @@ RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/10/main/pg_hba.con
 RUN echo "listen_addresses='*'" >> /etc/postgresql/10/main/postgresql.conf
 #Expose the necessary port
 EXPOSE 5000
-#Make the command that runs on start
-CMD /etc/init.d/postgresql start &&\
+#Set up the postgres database
+USER postgres
+RUN /etc/init.d/postgresql start &&\
 psql --command "CREATE USER admin WITH SUPERUSER PASSWORD 'admin123';" &&\
 createdb -O admin display_msg_details &&\
-/etc/init.d/postgresql start && flask run -h 0.0.0.0
+/etc/init.d/postgresql stop
+
+USER root
+#Make the command that runs on start
+CMD /etc/init.d/postgresql start && flask run -h 0.0.0.0
 
 
