@@ -41,6 +41,22 @@ def display_message():
     get_msg()
     return jsonify({'details':'ok'})
 
+@app.route('/update_board', methods = ['POST'])
+def update_board():
+    if request.is_json:
+        print(request.get_json())
+        try:
+            json_data = request.get_json()
+            client.set('board_id',str(json_data['board_id']))
+        except:
+            print('Error in parsing json board_id data')
+
+    #Clear the lcd
+    clear_lcd()
+    #Get the latest data from the server
+    get_msg()
+    return jsonify({'details':'ok'})
+
 
 
 

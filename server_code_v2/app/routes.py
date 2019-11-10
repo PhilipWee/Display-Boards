@@ -30,7 +30,7 @@ def display_messages():
         board_id = showTimeForm.board_id.data
         # Send the message for displaying to the RPI
         try:
-            inform_api('', 'http://' + display_dict[board_id] + ':5001', show_time=show_time)
+            inform_api('http://' + display_dict[board_id] + ':5001', show_time=show_time)
         except:
             print('Warning: Display board uncontactable.')
 
@@ -130,7 +130,7 @@ def display_messages():
         
         # Send the message for displaying to the RPI
         try:
-            inform_api(msg, 'http://' + display_dict[board_id] + ':5001')
+            inform_api('http://' + display_dict[board_id] + ':5001',msg=msg)
 
         except:
             print('Warning: Display board uncontactable.')
@@ -168,6 +168,12 @@ def manage_display_boards():
         # Insert the data into the database
         add_display_board(target_address,additional_details=additional_details)
 
+        #Get the display boards table to populate the board id
+        display_table = get_display_table()
+        display_dict = {row['ip_address']:row['id'].strip() for row_no,row in display_table.iterrows()}
+
+        inform_api('http://' + target_address + ':5001',extension = '/update_board', board_id = display_dict[target_address])
+
     # Get the calendar table
     data=get_display_table()
 
@@ -185,12 +191,6 @@ def manage_display_boards():
 def get_calendar_data():
     # Get the calendar table
     data=get_calendar_table()
-    #Get the display boards table
-    display_table = get_display_table()
-    display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
-    #Slice it to only get those values relevant for the display board in question
-    data['target_address'] = pd.Series(display_dict[id] for id in data['board_id'])
-    data = data[data['target_address'] == request.remote_addr]
 
     jsonified=data.to_json()
     return jsonified
@@ -220,7 +220,7 @@ def delete_msg():
         return '1'
     # Tell the rpi that there is an update
     try:
-        inform_api('message deleted', 'http://' + display_dict[board_id] + ':5001')
+        inform_api('http://' + display_dict[board_id] + ':5001', msg='message deleted')
         return '0'
 
     except:

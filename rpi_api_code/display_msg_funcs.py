@@ -165,6 +165,8 @@ def get_msg(url = HOSTURL):
     print(data.head())
     
     msg_array = []
+    #Slice the dataframe to only include your own board id
+    data = data[str(data['board_id']) == str(client.get('board_id'),encoding='utf-8')]
     #Remove the irrelevant rows
     for row_no,row in data.iterrows():
         start = row['msg_start_time']
@@ -182,6 +184,8 @@ def get_msg(url = HOSTURL):
 
 #Start memcache to store info like whether to display the time, etc
 client = base.Client(('localhost',11211))
+#Set a default board id first
+client.set('board_id','-1')
 #Intialise by connecting to the host
 print(get_msg())
 
