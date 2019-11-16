@@ -181,6 +181,12 @@ def manage_display_boards():
         # except:
         #     return jsonify({'Error':'Invalid input'})
 
+        #Get the display boards table to populate the board id
+        display_table = get_display_table()
+        display_dict = {row['ip_address']:row['id'].strip() for row_no,row in display_table.iterrows()}
+
+        inform_api('http://' + target_address + ':5001',extension = '/update_board', board_id = display_dict[target_address])
+
     # Get the calendar table
     data=get_display_table()
 
@@ -198,12 +204,6 @@ def manage_display_boards():
 def get_calendar_data():
     # # Get the calendar table
     data=get_calendar_table()
-    # #Get the display boards table
-    # display_table = get_display_table()
-    # display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
-    # #Slice it to only get those values relevant for the display board in question
-    # data['target_address'] = pd.Series(display_dict[id] for id in data['board_id'])
-    # data = data[data['target_address'] == request.remote_addr]
 
     jsonified=data.to_json()
     return jsonified

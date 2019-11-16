@@ -9,9 +9,6 @@ RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-k
 RUN apt-get update
 RUN apt-get install postgresql postgresql-contrib --assume-yes
 USER postgres
-RUN /etc/init.d/postgresql start &&\
-psql --command "CREATE USER admin WITH SUPERUSER PASSWORD 'admin123';" &&\
-createdb -O admin display_msg_details
 USER root
 RUN apt-get install python3-flask --assume-yes
 RUN apt-get install python3-pip --assume-yes
@@ -26,8 +23,21 @@ WORKDIR /usr/src/app/server_code_v2
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV FLASK_APP=run_website.py
+# Adjust PostgreSQL configuration so that remote connections to the
+# database are possible.
+RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/10/main/pg_hba.conf
+# And add ``listen_addresses`` to ``/etc/postgresql/9.3/main/postgresql.conf``
+RUN echo "listen_addresses='*'" >> /etc/postgresql/10/main/postgresql.conf
 #Expose the necessary port
 EXPOSE 5000
+#Set up the postgres database
+USER postgres
+RUN /etc/init.d/postgresql start &&\
+psql --command "CREATE USER admin WITH SUPERUSER PASSWORD 'admin123';" &&\
+createdb -O admin display_msg_details &&\
+/etc/init.d/postgresql stop
+
+USER root
 #Make the command that runs on start
 CMD /etc/init.d/postgresql start && flask run -h 0.0.0.0
 

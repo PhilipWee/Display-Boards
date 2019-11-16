@@ -227,6 +227,8 @@ def get_msg(url = HOSTURL):
 
 #Start memcache to store info like whether to display the time, etc
 client = base.Client(('localhost',11211))
+#Set a default board id first
+client.set('board_id','-1')
 #Intialise by connecting to the host
 print(get_msg())
 register_board()
