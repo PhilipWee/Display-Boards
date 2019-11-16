@@ -49,9 +49,9 @@ def connect():
     conn =psycopg2.connect(conn_string)
     print("Connected!")
     #Craft the SQL for making the necessary tables
-    msg_details_sql = 'CREATE TABLE msg_details (id SERIAL, msg text, msg_start_time text, msg_end_time text, importance smallint, board_id smallint, repeat CHARACTER(255), PRIMARY KEY(id));'
+    msg_details_sql = 'CREATE TABLE msg_details (id SERIAL, msg text, msg_start_time text, msg_end_time text, importance smallint, board_id CHARACTER(255), repeat CHARACTER(255), PRIMARY KEY(id));'
     usr_details_sql = 'CREATE TABLE usr_details (id SERIAL, username CHARACTER(255), board_id_permissions json, PRIMARY KEY(id));'
-    display_details_sql = 'CREATE TABLE display_details (id SERIAL, ip_address CHARACTER(255), additional_details text, PRIMARY KEY(id));'
+    display_details_sql = 'CREATE TABLE display_details (id CHARACTER(255), additional_details text, display_time BOOL, display_up_to_x_messages smallint);'
     
     #Make the tables
     create_table('msg_details',msg_details_sql)
@@ -63,6 +63,8 @@ def sql_str(string):
     if string is None:
         return "NULL"
     else:
+        if string is True or string is False:
+            string = str(string).lower()
         result = "'"+str(string).replace("'","''") +"'"
         return result
 
@@ -77,14 +79,33 @@ def insert_message(msg, start_time = None, end_time = None, repeat= None, import
     crsr.close()
 
 #Add a display board to the postgres database
-def add_display_board(ip_address, additional_details = None):
-    crsr = conn.cursor()
-    sql = "INSERT INTO display_details(ip_address, additional_details) \
-        VALUES \
-        ("+sql_str(ip_address)+", "+sql_str(additional_details)+");"
-    crsr.execute(sql)
-    conn.commit()
-    crsr.close()
+def add_display_board(board_id, additional_details = None, display_time=False, display_up_to_x_messages=1):
+    #Check if it is already inside the db
+    current_data = pd.read_sql("SELECT * FROM display_details WHERE id = " + sql_str(board_id),conn)
+    # print(current_data)
+    if current_data.empty:
+        #Run the actual insertion
+        crsr = conn.cursor()
+        sql = "INSERT INTO display_details(id, additional_details, display_time, display_up_to_x_messages) \
+            VALUES \
+            ("+sql_str(board_id)+", "+sql_str(additional_details)+", "+sql_str(display_time)+", "+sql_str(display_up_to_x_messages)+");"
+        crsr.execute(sql)
+        conn.commit()
+        crsr.close()
+        return jsonify({'Success':'Success'})
+    else:
+        return jsonify({'Warning':'Display Board already in database'})
+
+def change_display_time(board_id, display_time):
+    if display_time == True or display_time == False:
+        crsr = conn.cursor()
+        sql = "UPDATE display_details \
+            SET display_time =  \
+            "+sql_str(display_time)+" WHERE id = "+sql_str(str(board_id).strip())
+        print(sql)
+        crsr.execute(sql)
+        conn.commit()
+        crsr.close()
 
 #Remove a message from the postgres database
 def rm_message(id):

@@ -22,17 +22,25 @@ def display_messages():
 
     #Get the display boards table to populate the board id
     display_table = get_display_table()
-    display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
-    form.board_id.choices = [(key,key) for key in display_dict.keys()]
+    form.board_id.choices = [(row['id'],row['id']) for row_no,row in display_table.iterrows()]
+    showTimeForm.board_id.choices = [(row['id'],row['id']) for row_no,row in display_table.iterrows()]
 
     if request.method == "POST" and showTimeForm.validate():
         show_time = showTimeForm.show_time.data
         board_id = showTimeForm.board_id.data
-        # Send the message for displaying to the RPI
-        try:
-            inform_api('', 'http://' + display_dict[board_id] + ':5001', show_time=show_time)
-        except:
-            print('Warning: Display board uncontactable.')
+        if show_time == 'false':
+            show_time = False
+        if show_time == 'true':
+            show_time = True
+        print(show_time)
+        # # Send the message for displaying to the RPI
+        # try:
+        #     inform_api('', 'http://' + display_dict[board_id] + ':5001', show_time=show_time)
+        # except:
+        #     print('Warning: Display board uncontactable.')
+        #Update the board id table
+        warning = "Board '" + str(board_id) + "' shows time: " + str(show_time)
+        change_display_time(board_id,show_time)
 
     if request.method == "POST" and form.validate():
         # Since the form submission is ok, save the message to the database
@@ -129,14 +137,14 @@ def display_messages():
 
         
         # Send the message for displaying to the RPI
-        try:
-            inform_api(msg, 'http://' + display_dict[board_id] + ':5001')
+        # try:
+        #     inform_api(msg, 'http://' + display_dict[board_id] + ':5001')
 
-        except:
-            print('Warning: Display board uncontactable.')
-            warning="Warning: Display board uncontactable. \
-                 Please check the internet connection of the display board. \
-                 The display board will be updated once it regains connection."
+        # except:
+        #     print('Warning: Display board uncontactable.')
+        #     warning="Warning: Display board uncontactable. \
+        #          Please check the internet connection of the display board. \
+        #          The display board will be updated once it regains connection."
 
     # Get the calendar table
     data=get_calendar_table()
@@ -160,13 +168,18 @@ def manage_display_boards():
     # The warning message gets displayed in case of connection issues, etc
     warning = ""
 
-    if request.method == "POST" and form.validate():
-        # Since the form submission is ok, save the display board details to the database
-        target_address = form.target_address.data
-        additional_details = form.details.data
+    if request.method == "POST":
+        data = request.get_json()
+        print(data)
+        # # Since the form submission is ok, save the display board details to the database
+        # target_address = form.target_address.data
+        # additional_details = form.details.data
 
-        # Insert the data into the database
-        add_display_board(target_address,additional_details=additional_details)
+        # # Insert the data into the database
+        # try:
+        return add_display_board(board_id=data['board_id'],additional_details=data['description'])
+        # except:
+        #     return jsonify({'Error':'Invalid input'})
 
     # Get the calendar table
     data=get_display_table()
@@ -183,16 +196,23 @@ def manage_display_boards():
 # For API call requesting calendar data
 @app.route('/get-calendar-data')
 def get_calendar_data():
-    # Get the calendar table
+    # # Get the calendar table
     data=get_calendar_table()
-    #Get the display boards table
-    display_table = get_display_table()
-    display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
-    #Slice it to only get those values relevant for the display board in question
-    data['target_address'] = pd.Series(display_dict[id] for id in data['board_id'])
-    data = data[data['target_address'] == request.remote_addr]
+    # #Get the display boards table
+    # display_table = get_display_table()
+    # display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
+    # #Slice it to only get those values relevant for the display board in question
+    # data['target_address'] = pd.Series(display_dict[id] for id in data['board_id'])
+    # data = data[data['target_address'] == request.remote_addr]
 
     jsonified=data.to_json()
+    return jsonified
+
+#For letting the rpi access the display table
+@app.route('/get-display-data')
+def get_display_table_api():
+    data = get_display_table()
+    jsonified = data.to_json()
     return jsonified
 
 # For handling the removal of messages
@@ -200,7 +220,7 @@ def get_calendar_data():
 def delete_msg():
     #Get the display boards table
     display_table = get_display_table()
-    display_dict = {row['id']:row['ip_address'].strip() for row_no,row in display_table.iterrows()}
+    display_dict = {row['id']:row['id'].strip() for row_no,row in display_table.iterrows()}
 
     # Get the calendar table
     data=get_calendar_table()
@@ -220,7 +240,7 @@ def delete_msg():
         return '1'
     # Tell the rpi that there is an update
     try:
-        inform_api('message deleted', 'http://' + display_dict[board_id] + ':5001')
+        # inform_api('message deleted', 'http://' + display_dict[board_id] + ':5001')
         return '0'
 
     except:

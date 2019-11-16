@@ -43,39 +43,6 @@
                 {% endfor %}
             </table>
         </div>
-        <div class="col-sm">
-            <h1>Add Display Board</h1>
-            <form action="" method="post" novalidate>
-                {{ form.hidden_tag() }}
-
-                <!-- IP Address -->
-                <div class="row align-items-center whole-day-no">
-                    <div class="col-sm ">
-                        {{ render_field(form.target_address.label)}}
-                    </div>
-                    <div class="col-sm-8">
-                        {{ render_field(form.target_address, class="form-control js-time-picker") }}
-                    </div>
-                </div>
-                <!-- Details -->
-                <div class="row align-items-center whole-day-no">
-                    <div class="col-sm ">
-                        {{ render_field(form.details.label)}}
-                    </div>
-                    <div class="col-sm-8">
-                        {{ render_field(form.details, class="form-control js-time-picker") }}
-                    </div>
-                </div>
-                
-
-                <!-- Submit Button -->
-                <div class="row">
-                    <div class="col-sm">
-                        {{ render_field(form.submit, class ="btn btn-primary") }}
-                    </div>
-                </div>
-            </form>
-        </div>
     </div>
 </div>
 

@@ -26,14 +26,6 @@ CORS(app)
 def display_message():
     if request.is_json:
         print(request.get_json())
-        try:
-            json_data = request.get_json()
-            if json_data['show_time'] == "true":
-                time_handle.show_time(True)
-            elif json_data['show_time'] == "false":
-                time_handle.show_time(False)
-        except:
-            print('Error in parsing json time data')
 
     #Clear the lcd
     clear_lcd()
