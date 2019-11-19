@@ -14,6 +14,7 @@ import sys, os
 import numpy as np
 from display_msg_funcs import get_msg, time_handler, clear_lcd
 from pymemcache.client import base
+from lib import DisplayBoard
 #--------------------------------------REQUIREMENTS--------------------------------------
 
 

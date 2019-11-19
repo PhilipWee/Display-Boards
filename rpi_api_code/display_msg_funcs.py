@@ -18,11 +18,12 @@ import pandas as pd
 from math import ceil
 from shared.time_check_funcs import check_is_time
 import json
+from lib import DisplayBoard as displayBoard
 
 #------------------------SETTINGS----------------------------------
 CHARACTERLIMIT = 16
-HOSTURL = 'http://127.0.0.1:5000'
-DISPLAY_TYPE = 'test' #Types: test (testing) small (Philip's board) big (on site)
+HOSTURL = 'http://13.250.247.107:5000'
+DISPLAY_TYPE = 'big' #Types: test (testing) small (Philip's board) big (on site)
 #------------------------SETTINGS----------------------------------
 
 is_rpi = True
@@ -61,20 +62,30 @@ if DISPLAY_TYPE == 'small':
 
 elif DISPLAY_TYPE == 'test':
     is_rpi = False
+elif DISPLAY_TYPE == 'big':
+    is_rpi = False
+    is_big = True
 
 #This function is for printing a message for a 16x2 LCD
 #Add to this function to handle different display board types
 def print_msg(msg):
     if is_rpi:
         lcd.message = msg
+    elif is_big:
+        displayBoard.display_text(msg)
     else:
         print(msg)
+    
         
 #This function is for clearing the 16x2 LCD
 #Add to this function to handle different display board types
 def clear_lcd():
     if is_rpi:
         lcd.clear()
+    elif is_big:
+        displayBoard.display_text('')
+    
+    
 
 
 #The time handler continuously updates the time or scrolls the message if necessary
@@ -200,9 +211,9 @@ def get_msg(url = HOSTURL):
     display_data = get_display_df(url)
     display_data = display_data[display_data['id'].apply(lambda x:x.strip()) == client.get('board_id').decode('utf-8')]
     print(display_data)
-    if display_data['display_time'].values[0] == False:
+    if display_data['display_time'].values == False:
         client.set('show_time_bool',False)
-    elif display_data['display_time'].values[0] == True:
+    elif display_data['display_time'].values == True:
         client.set('show_time_bool',True)
     print(data.head())
     
